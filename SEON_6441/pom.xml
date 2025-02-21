@@ -14,8 +14,22 @@
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>  <!-- Update if using a newer Java version -->
+        <junit.jupiter.version>5.9.2</junit.jupiter.version>
         <maven.compiler.target>17</maven.compiler.target>
+        
     </properties>
+    
+    <dependencies>
+        <!-- JUnit 5 (Jupiter) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Other dependencies your project needs -->
+    </dependencies>
 
    <build>
     <plugins>

@@ -1,3 +1,5 @@
+package com.Game;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -148,15 +150,4 @@ class Map {
 
 }
 
-class Player {
-    private String name;
 
-    public Player(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-}

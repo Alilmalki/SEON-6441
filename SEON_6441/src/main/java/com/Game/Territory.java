@@ -1,7 +1,8 @@
+package com.Game;
 import java.util.ArrayList;
 import java.util.List;
 
-class Territory {
+public class Territory {
     private String name;
     private String continent;
     private int bonus;
@@ -60,6 +61,15 @@ class Territory {
             }
         }
         return enemyNeighbors;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (obj == null || obj.getClass() != this.getClass()) {
+    		return false;
+    	}
+    	Territory t = (Territory)obj;
+    	return t.getName() == this.name && t.getContinent() == this.continent;
     }
 
     @Override
