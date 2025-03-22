@@ -1,5 +1,9 @@
 package com.Game.controller;
 
+import com.Game.Phases.IssueOrderPhase;
+import com.Game.Phases.Phase;
+import com.Game.Phases.PhaseType;
+import com.Game.Phases.StartupPhase;
 import com.Game.model.Map;
 import com.Game.model.Player;
 import com.Game.utils.MapLoader;
@@ -90,7 +94,12 @@ public class GameController {
      * Controller for gameplay operations.
      */
     private GamePlayController d_gamePlayController;
-    
+
+    /**
+     * Represents the startup phase of the game.
+     */
+    private Phase d_startupPhase;;
+
     /**
      * Default constructor that initializes the game controller.
      */
@@ -107,6 +116,7 @@ public class GameController {
         this.d_commandPromptView = new CommandPromptView();
         this.d_mapEditorController = new MapEditorController(this, d_gameMap, d_mapLoader);
         this.d_gamePlayController = new GamePlayController(this, d_gameMap, d_players);
+        d_startupPhase =  new StartupPhase();
     }
     
     /**
@@ -114,28 +124,30 @@ public class GameController {
      * Provides a command prompt that's available throughout the game.
      */
     public void startGame() {
+
+        d_startupPhase.setPhase(PhaseType.STARTUP);
+
         d_view.displayWelcomeMessage();
         boolean l_isMapLoaded = false;
-        
         while (true) {
             String l_input;
             String[] l_commandParts;
-            
+
             if (d_currentPhase == MAP_EDITING_PHASE) {
                 d_view.displayMapEditingMenu();
                 l_input = d_commandPromptView.getCommand();
                 l_commandParts = l_input.split("\\s+");
-                
+
                 if (l_commandParts.length == 0) continue;
-                
+
                 String l_command = l_commandParts[0];
-                
+
                 if (l_command.equals("exit")) {
                     d_view.displayMessage("Exiting the program.");
                     d_commandPromptView.closeScanner();
                     System.exit(0);
                 }
-                
+
                 if (!l_isMapLoaded && !l_command.equals("editmap") && !l_command.equals("loadmap")) {
                     d_view.displayError("You must load/edit a map first using the 'editmap' or 'loadmap' command.");
                 } else {
@@ -145,33 +157,33 @@ public class GameController {
                 d_view.displayStartupMenu();
                 l_input = d_commandPromptView.getCommand();
                 l_commandParts = l_input.split("\\s+");
-                
+
                 if (l_commandParts.length == 0) continue;
-                
+
                 String l_command = l_commandParts[0];
-                
+
                 if (l_command.equals("exit")) {
                     d_view.displayMessage("Exiting the program.");
                     d_commandPromptView.closeScanner();
                     System.exit(0);
                 }
-                
+
                 handleStartupCommand(l_commandParts, l_command);
             } else if (d_currentPhase == MAIN_GAME_PHASE) {
                 d_view.displayMainGameMenu();
                 l_input = d_commandPromptView.getCommand();
                 l_commandParts = l_input.split("\\s+");
-                
+
                 if (l_commandParts.length == 0) continue;
-                
+
                 String l_command = l_commandParts[0];
-                
+
                 if (l_command.equals("exit")) {
                     d_view.displayMessage("Exiting the program.");
                     d_commandPromptView.closeScanner();
                     System.exit(0);
                 }
-                
+
                 d_gamePlayController.handleCommand(l_commandParts, l_command);
             }
         }
@@ -240,7 +252,7 @@ public class GameController {
                     break;
                 }
             }
-            
+
             if (!l_playerExists) {
                 d_players.add(new Player(p_playerName));
                 d_view.displayMessage("Player added: " + p_playerName);
@@ -364,22 +376,17 @@ public class GameController {
     public void setCurrentPhase(int p_currentPhase) {
         this.d_currentPhase = p_currentPhase;
     }
-    
+
     /**
-     * Checks if countries have been assigned to players.
-     * 
-     * @return true if countries have been assigned, false otherwise
+     * Sets the game phase to the startup phase.
+     *
+     * @param p_gameController the game controller managing the game state
+     * @param p_commandParts   the command parts passed as input
      */
-    public boolean areCountriesAssigned() {
-        return d_countriesAssigned;
+    public void setStartupPhase(GameController p_gameController, String[] p_commandParts)
+    {
+        d_startupPhase.setPhase(PhaseType.STARTUP);
+        d_startupPhase.StartPhase(p_gameController, null, null, p_commandParts);
     }
-    
-    /**
-     * Sets whether countries have been assigned to players.
-     * 
-     * @param p_countriesAssigned The countries assigned status to set
-     */
-    public void setCountriesAssigned(boolean p_countriesAssigned) {
-        this.d_countriesAssigned = p_countriesAssigned;
-    }
+
 }
